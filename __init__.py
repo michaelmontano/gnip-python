@@ -22,7 +22,7 @@ class Gnip:
 
     """
 
-    def __init__(self, username, password, gnip_server=None):
+    def __init__(self, username, password, gnip_server=None, properties_file=None):
         """Initialize the class.
 
         @type username string
@@ -37,10 +37,13 @@ class Gnip:
 
         """
 
-        index = int(__file__.rfind("/"))
-        basedir = __file__[0:index]
         p = Properties()
-        p.load(open(basedir + '/gnip.properties'))
+        if properties_file is not None:
+            p.load(open(properties_file))
+        else:
+            index = int(__file__.rfind("/"))
+            basedir = __file__[0:index]
+            p.load(open(basedir + '/gnip.properties'))
         
         # Determine base Gnip URL
         if (gnip_server is None):
@@ -123,6 +126,22 @@ class Gnip:
         """
 
         url_path = "/my/publishers/" + publisher_name + "/activity.xml"
+        return self.publish_activities_to_path(url_path, activities)
+
+    def publish_activities_to_path(self, url_path, activities):
+        """Publish the provided activities to Gnip.
+
+        @type url_path string
+        @param url_path string The url path to publish activities to.
+        @type activities list of Activity objects
+        @param activities The activities to be published
+        @return string containing response from the server
+
+        This method allows a publisher to publish activities to the Gnip
+        service. You can only publish activities to a publisher that you own.
+
+        """
+        
         return self.__parse_response(self.__do_http_post(url_path, activities.to_xml()))
 
     def create_filter(self, publisher_scope, publisher_name, filter):
