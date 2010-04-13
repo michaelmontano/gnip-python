@@ -143,6 +143,22 @@ class Gnip:
         """
         
         return self.__parse_response(self.__do_http_post(url_path, activities.to_xml()))
+        
+    def publish_xml_to_path(self, url_path, xml):
+        """Publish the provided xml to Gnip.
+
+        @type url_path string
+        @param url_path string The url path to publish activities to.
+        @type xml string representing activities in xml
+        @param xml The xml to be published
+        @return string containing response from the server
+
+        This method allows a publisher to publish activities to the Gnip
+        service. You can only publish activities to a publisher that you own.
+
+        """
+        
+        return self.__parse_response(self.__do_http_post(url_path, xml))
 
     def create_filter(self, publisher_scope, publisher_name, filter):
         """Create a Filter on the Gnip service.
